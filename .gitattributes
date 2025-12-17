@@ -1,0 +1,16 @@
+# Semua file JS/TS/JSX/TSX pakai LF
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# File lain seperti JSON, CSS, HTML juga LF
+*.json text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+
+# File biner jangan diubah
+*.png binary
+*.jpg binary
+*.ico binary

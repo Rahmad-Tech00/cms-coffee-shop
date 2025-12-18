@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
 import { useState } from 'react'
-import { CBadge, CButton, CSmartTable, CFormSelect, CFormInput } from '@coreui/react-pro'
-import { CIcon } from '@coreui/icons-react'
-import { cilPencil, cilTrash } from '@coreui/icons'
+import { CBadge, CSmartTable, CFormSelect, CFormInput } from '@coreui/react-pro'
+import { Add_EditProduct } from '../../components'
+import { Delete } from '../../components'
 
 const getBadge = (status) => {
   switch (status) {
@@ -18,6 +19,18 @@ const getBadge = (status) => {
 const Product = () => {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [search, setSearch] = useState('')
+
+  const handleSaveProduct = (productData) => {
+    console.log('Product data parent:', productData)
+  }
+
+  const handleEditProduct = (productData) => {
+    console.log('Edit data', productData)
+  }
+
+  const handleDelete = (data) => {
+    console.log('Delete data', data)
+  }
 
   const items = [
     {
@@ -121,7 +134,7 @@ const Product = () => {
     {
       name: 'Americano',
       category: 'Coffee',
-      price: '25,000',
+      price: '299,000',
       status: 'Active',
       action: 'Delete',
     },
@@ -150,7 +163,7 @@ const Product = () => {
             ))}
           </CFormSelect>
         </div>
-        <div style={{ flex: 5 }}>
+        <div style={{ flex: 1 }}>
           <CFormInput
             type="text"
             placeholder="Search product..."
@@ -159,7 +172,7 @@ const Product = () => {
           />
         </div>
         <div>
-          <CButton color="primary">Add Product</CButton>
+          <Add_EditProduct modal="Add Product" onSave={handleSaveProduct} />
         </div>
       </div>
       <CSmartTable
@@ -174,8 +187,10 @@ const Product = () => {
           ),
           action: (item) => (
             <td>
-              <CIcon icon={cilPencil} customClassName={'icon'} style={{ cursor: 'pointer' }} />
-              <CIcon icon={cilTrash} customClassName={'icon'} style={{ cursor: 'pointer' }} />
+              <div className='d-flex gap-2'>
+                <Add_EditProduct product={item} onSave={handleEditProduct} />
+                <Delete product={item} onDelete={handleDelete} />
+              </div>
             </td>
           ),
         }}

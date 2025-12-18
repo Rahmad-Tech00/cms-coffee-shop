@@ -84,7 +84,7 @@ const User = () => {
   },
 ]
 
-const roles = ['All', ...new Set(userItem.map((user) => user.role))]
+  const roles = ['All', ...new Set(userItem.map((user) => user.role))]
 
   const filteredRole = userItem.filter((user) => {
     const matchesRole = selectedRole === 'All' || user.role === selectedRole

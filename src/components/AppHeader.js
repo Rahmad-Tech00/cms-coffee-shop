@@ -93,7 +93,7 @@ const AppHeader = () => {
                 type="button"
                 onClick={() => setColorMode('auto')}
               >
-                <CIcon className="me-2" icon={cilContrast} size="lg" /> Auto
+                {/* <CIcon className="me-2" icon={cilContrast} size="lg" /> Auto */}
               </CDropdownItem>
             </CDropdownMenu>
           </CDropdown>

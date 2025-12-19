@@ -1,21 +1,18 @@
 /* eslint-disable prettier/prettier */
-import {useState} from 'react'
-import { CBadge, CSmartTable, CButton, CFormSelect, CDateRangePicker } from '@coreui/react-pro'
+import { useState } from 'react'
+import { CBadge, CSmartTable, CButton } from '@coreui/react-pro'
 import { CIcon } from '@coreui/icons-react'
-import { cilArrowTop } from '@coreui/icons' 
-import {
-  CCol,
-  CRow,
-  CWidgetStatsA,
-  CDropdown,
-  CDropdownToggle,
-  CDropdownMenu,
-  CDropdownItem,
-} from '@coreui/react'
-// import CDateRangePicker from '@coreui/react-pro/src/components/date-range-picker/CDateRangePicker'
+import { cilArrowTop } from '@coreui/icons'
+import { CCol, CRow, CWidgetStatsA } from '@coreui/react'
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker'
 
 const Report = () => {
-  const [selectedDate, setSelectedDate] = useState('All')
+  const [dateRange, setDateRange] = useState([null, null])
+  const [filteredData, setFilteredData] = useState([])
 
   const getOrders = (order) => {
     switch (order) {
@@ -31,81 +28,85 @@ const Report = () => {
       orders: '48',
       grossSales: 'Rp 1,575,000',
       category: 'Non-Coffee',
-      topProduct: 'Matcha'
+      topProduct: 'Matcha',
     },
     {
       date: 'April 29, 2024',
       orders: '53',
       grossSales: 'Rp 1,760,000',
       category: 'Food',
-      topProduct: 'Papeda'
+      topProduct: 'Papeda',
     },
     {
       date: 'April 28, 2024',
       orders: '51',
       grossSales: 'Rp 1,735,000',
       category: 'Coffee',
-      topProduct: 'Americano'
+      topProduct: 'Americano',
     },
     {
       date: 'April 27, 2024',
       orders: '65',
       grossSales: 'Rp 2,140,000',
       category: 'Coffee',
-      topProduct: 'Americano'
+      topProduct: 'Americano',
     },
     {
       date: 'April 26, 2024',
       orders: '64',
       grossSales: 'Rp 2,300,000',
       category: 'Coffee',
-      topProduct: 'Americano'
+      topProduct: 'Americano',
     },
     {
       date: 'April 25, 2024',
       orders: '53',
       grossSales: 'Rp 3,760,000',
       category: 'Coffee',
-      topProduct: 'Americano'
+      topProduct: 'Americano',
     },
   ]
 
-  const dates = ['All', ...new Set(reportItem.map((report) => report.date))]
+  const handleFilter = () => {
+    if (dateRange[0] && dateRange[1]) {
+      const startDate = dateRange[0].toDate()
+      const endDate = dateRange[1].toDate()
 
-  const filteredDate = reportItem.filter((report) => {
-    const date = selectedDate === 'All' || report.date === selectedDate
-    return date
-  })
+      console.log('Start Date:', startDate)
+      console.log('End Date:', endDate)
 
+      const filtered = reportItem.filter((report) => {
+        const reportDate = new Date(report.date)
+        return reportDate >= startDate && reportDate <= endDate
+      })
+
+      console.log('Filtered Data:', filtered)
+      console.log('Total Items Found:', filtered.length)
+
+      setFilteredData(filtered)
+    } else {
+      console.log('No date range selected, showing all data')
+      setFilteredData(reportItem)
+    }
+  }
 
   return (
     <>
       <div className="mb-4 d-flex align-items-center">
-        <CRow>
-          <CCol className="mb-3 mb-sm-0" sm={''}>
-            <CDateRangePicker
-              label="Date"
-              locale="id-ID"
-              onStartDateChange={(date) => console.log(date)}
-              onEndDateChange={(date) => console.log(date)}
-            />
-          </CCol>
-        </CRow>
-        {/* <div style={{ width: '200px' }}>
-          <CFormSelect
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          >
-            {dates.map((date) => (
-              <option key={date} value={date}>
-                {date === 'All' ? 'All Date' : date}
-              </option>
-            ))}
-          </CFormSelect>
-        </div> */}
-        <CButton color="primary">
-          Filter
-        </CButton>
+        <div>
+          <LocalizationProvider  dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DateRangePicker']}>
+              <DemoItem component="DateRangePicker">
+                <DateRangePicker value={dateRange} onChange={(newValue) => setDateRange(newValue)} />
+              </DemoItem>
+            </DemoContainer>
+          </LocalizationProvider>
+        </div>
+        <div>
+          <CButton color="primary" onClick={handleFilter}>
+            Filter
+          </CButton>
+        </div>
       </div>
       <CRow>
         <CCol sm={3}>
@@ -115,8 +116,7 @@ const Report = () => {
             color="primary"
             value={
               <>
-                Rp 37,250,000{' '}
-                <span className="fs-6 fw-normal"></span>
+                Rp 37,250,000 <span className="fs-6 fw-normal"></span>
               </>
             }
           />
@@ -143,8 +143,7 @@ const Report = () => {
             color="warning"
             value={
               <>
-                1,580{' '}
-                <span className="fs-6 fw-normal"></span>
+                1,580 <span className="fs-6 fw-normal"></span>
               </>
             }
           />
@@ -156,15 +155,14 @@ const Report = () => {
             color="danger"
             value={
               <>
-                Rp 29,102{' '}
-                <span className="fs-6 fw-normal"></span>
+                Rp 29,102 <span className="fs-6 fw-normal"></span>
               </>
             }
           />
         </CCol>
       </CRow>
       <CSmartTable
-        items={filteredDate}
+        items={filteredData.length > 0 ? filteredData : reportItem}
         itemsPerPage={5}
         pagination
         scopedColumns={{

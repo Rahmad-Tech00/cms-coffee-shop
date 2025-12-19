@@ -22,7 +22,7 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Users & Roles',
+    name: 'Security',
   },
   {
     component: CNavItem,
